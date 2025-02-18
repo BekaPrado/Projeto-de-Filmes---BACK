@@ -13,51 +13,60 @@
  *                 prisma               npm install prisma -save(para fazer a conexão com o BD)
  *                 prisma/client        npm install @prisma/client --save (para rodar os scripts SQL)
  *                                                  
+ * 
+ *          Após a instalação do prima e do prisma client, devemos :
+ *              npx prisma init
+ * 
+ *          Você deverá configurar o arquivo .env e o schema.prisma com as credenciais do BD
+ *          Após essa configuração voce deverá rodar o seguinte comando:
+ *                      npx prisma migrate dev
  **************************************************************************************************************************/
-
-
-/*
-    Para criar uma API devemos instalar:
-     express - npm install expres --save                 (Serve para criar a API)
-     cors - npm install express --save                   (Serve para as premissões da API)
-     body-parser - npm install body-parser --save        (Serve paara a API receber dados na requisição*/ 
-
-
-
+    //Import das bibliotecas para configurar a API
      const express        = require('express')
      const cors           = require('cors')
      const bodyParser     = require('body-parser')
      
-     
-     //Inicia a utilização do express
+     //Manipular o body da requisição para chegar apenas JSON
+     const bodyParserJSON = bodyParser.json()
+
+     //Cria o objeto app com referências do express para criar a API
      const app = express()
      
      //response - Significa a resposta da API
      //request - Significa a chegada de dados na API
      
      app.use((request, response, next) =>{
-         //Permissõe de onde virão as requisições na API
-         // * - fica liberado para qualquer máquina ou colocar o IP 
-         // da maquina que vai realizar as requisições
          response.header('Access-Control-Allow-Origin', '*')
-     
-         //Permissão de quais metodos a API irá responder - CORS CUIDA DESSAS PERMISSÕES ---VERBOS HTTP
-             //get - pegar dados da API na tela
-             //post - inserir ovos itens e salvar 
-             //put - alterar dados existentes na api
-             //delete - excluir item existente na API
-         response.header('Access-Control-Allow-Methods', 'GET')
+
+         response.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
      
          app.use(cors()) //Aplica/ATIVA as restrições do CORS da requisição
      
          next()
      })
      
-    
-const funcoes = require('./modulo/funcoes');
+//Permissão de quais metodos a API irá responder - CORS CUIDA DESSAS PERMISSÕES ---VERBOS HTTP
+//get - pegar dados da API na tela
+//post - inserir novos itens e salvar 
+//put - alterar dados existentes na api
+//delete - excluir item existente na API
+//options - 
 
-//---------------------------------------------------------------------------------------------------
+//____________________________________________________________________________________________________________________________________________________________
 
-//get atualizarFilme
+const controllerFilme = require('./controller/filme/controllerFilme')
 
-app.post('', async function (request, response) )
+
+app.post('/v1/controle-filmes/filme', cors(), bodyParserJSON, async function (request, response){
+    //Recebe o body da requisição os dados encaminhados
+    let  dadosBody = request.body
+    let resultFilme = await controllerFilme.inserirFilme(dadosBody)
+
+    response.status(resultFilme.status-code)
+    response.json(resultFilme)
+
+})
+
+app.listen('3030', function(){
+    console.log('API funcionando e aguardando requisições .....................................')
+})

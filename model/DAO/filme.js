@@ -32,7 +32,7 @@ const insertFilme = async function(filme){
                                      )`
     //pedindo para o prisma executar a variavel no my sql
     //executa o script sql no banco de dados e aguarda o retorno do BD para saber se deu certo
-    let result = await risma.$executeRawUnsafe(sql) //IMPORTANTE  *aguarde o bd responde*
+    let result = await prisma.$executeRawUnsafe(sql) //IMPORTANTE  *aguarde o bd responde*
 
     if(result)
         return true
