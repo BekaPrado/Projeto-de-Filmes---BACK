@@ -55,6 +55,7 @@
 //____________________________________________________________________________________________________________________________________________________________
 
 const controllerFilme = require('./controller/filme/controllerFilme')
+const { Param } = require('@prisma/client/runtime/library')
 
 
 app.post('/v1/controle-filmes/filme', cors(), bodyParserJSON, async function (request, response){
@@ -64,7 +65,7 @@ app.post('/v1/controle-filmes/filme', cors(), bodyParserJSON, async function (re
 
     //Recebe o body da requisição os dados encaminhados
     let  dadosBody = request.body
-    let resultFilme = await controllerFilme.inserirFilme(dadosBody, contentType)
+    let resusltFilme = await controllerFilme.inserirFilme(dadosBody, contentType)
 
     response.status(resultFilme.status_code)
     response.json(resultFilme)
@@ -79,6 +80,10 @@ app.get('/v1/controle-filmes/filme', cors(),async function(request, response){
     response.json(resultFilme)
 } )
 
+
+app.get('/v1/controle-filmes/id')
+
 app.listen('5050', function(){
     console.log('API funcionando e aguardando requisições .....................................')
 })
+
